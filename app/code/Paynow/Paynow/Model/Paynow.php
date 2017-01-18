@@ -208,9 +208,9 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 
         $this->_config = $configFactory->create( $parameters );
 
-        if (! defined('PF_DEBUG'))
+        if (! defined('PN_DEBUG'))
         {
-            define('PF_DEBUG', $this->getConfigData('debug'));
+            define('PN_DEBUG', $this->getConfigData('debug'));
         }
 
     }
@@ -280,14 +280,14 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
     protected function getStoreName()
     {
         $pre = __METHOD__ . " : ";
-        pflog( $pre . 'bof' );
+        pnlog( $pre . 'bof' );
 
         $storeName = $this->_scopeConfig->getValue(
             'general/store_information/name',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
 
-        pflog( $pre . 'store name is '. $storeName );
+        pnlog( $pre . 'store name is ' . $storeName );
 
         return $storeName;
     }
@@ -324,72 +324,72 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
         $this->_logger->debug($pre . 'serverMode : '. $this->getConfigData( 'server' ));
 
         // If NOT test mode, use normal credentials
-        if( $this->getConfigData( 'server' ) == 'live' )
-        {
+//        if( $this->getConfigData( 'server' ) == 'live' ) {
             $merchantId = $this->getConfigData( 'merchant_id' );
-            $merchantKey = $this->getConfigData( 'merchant_key' );
-        }
-        // If test mode, use generic sandbox credentials
-        else
-        {
-            $merchantId = '10000100';
-            $merchantKey = '46f0cd694581a';
-        }
+	    $serviceKey = $this->getConfigData( 'service_key' );
+//        }
+	    $sageGUID = "f0f593a7-338d-406b-b340-5b4acd50f627";
 
         // Create description
-        foreach( $order->getAllItems() as $items )
-        {
+        foreach( $order->getAllItems() as $items ) {
             $description .= $this->getNumberFormat( $items->getQtyOrdered() ) . ' x ' . $items->getName() .';';
         }
 
-        $pfDescription = trim(substr( $description, 0, 254 ));
+
+	    $customerID = $order->getData('customer_id');
+	    $customerName = $order->getData('customer_firstname') . " " . $order->getData('customer_lastname');
+	    $orderID = $order->getRealOrderId();
+
+
+	    $pnDescription = trim(substr( "$description - ({$customerName})", 0, 254 ));
 
         // Construct data for the form
-        $data = array(
-            // Merchant details
-            'merchant_id' => $merchantId,
-            'merchant_key' => $merchantKey,
-            'return_url' => $this->getPaidSuccessUrl(),
-            'cancel_url' => $this->getPaidCancelUrl(),
-            'notify_url' => $this->getPaidNotifyUrl(),
+	    $data = array(
+		    // Merchant details
 
-            // Buyer details
-            'name_first' => $order->getData( 'customer_firstname' ),
-            'name_last' => $order->getData( 'customer_lastname' ),
-            'email_address' => $order->getData( 'customer_email' ),
+		    'm1' => $serviceKey,
+		    'm2' => $sageGUID,
+		    'return_url' => $this->getPaidSuccessUrl(),
+		    'cancel_url' => $this->getPaidCancelUrl(),
+		    'notify_url' => $this->getPaidNotifyUrl(),
 
-            // Item details
-            'm_payment_id' => $order->getRealOrderId(),
-            'amount' => $this->getTotalAmount( $order ),
-            'item_name' => $this->_storeManager->getStore()->getName() .', Order #'. $order->getRealOrderId(),
-            'item_description' => $pfDescription,
-        );
+		    // Buyer details
+		    'm9' => $order->getData( 'customer_email' ),
 
-        $pfOutput = '';
+		    'p3' => $pnDescription,
+		    'm4' => "{$customerID}",
+
+		    // Item details
+		    'p4' => $this->getTotalAmount( $order ),
+		    'p2' => $orderID
+
+	    );
+
+        $pnOutput = '';
         // Create output string
         foreach( $data as $key => $val )
         {
             if (!empty( $val ))
             {
-                $pfOutput .= $key .'='. urlencode( $val ) .'&';
+                $pnOutput .= $key .'='. urlencode( $val ) .'&';
             }
         }
 
         $passPhrase = $this->getConfigData('passphrase');
-        $pfOutput = substr( $pfOutput, 0, -1 );
+        $pnOutput = substr( $pnOutput, 0, -1 );
 
         if ( !empty( $passPhrase ) && $this->getConfigData('server') !== 'test' )
         {
-            $pfOutput = $pfOutput."&passphrase=".urlencode( $passPhrase );
+            $pnOutput = $pnOutput."&passphrase=".urlencode( $passPhrase );
         }
 
-        pflog( $pre . 'pfOutput for signature is : '. $pfOutput );
+        pnlog( $pre . 'pnOutput for signature is : ' . $pnOutput );
 
-        $pfSignature = md5( $pfOutput );
+        $pfSignature = md5( $pnOutput );
 
         $data['signature'] = $pfSignature;
         $data['user_agent'] = 'Magento 2.0';
-        pflog( $pre . 'data is :'. print_r( $data, true ) );
+        pnlog( $pre . 'data is :' . print_r( $data, true ) );
         return( $data );
     }
 
@@ -437,13 +437,17 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 
     /*
      * called dynamically by checkout's framework.
+     *
+     * Not used anymore  according to https://github.com/magento/magento2/issues/2241#issuecomment-155471428
      */
     public function getOrderPlaceRedirectUrl()
     {
         $pre = __METHOD__ . " : ";
-        pflog( $pre . 'bof' );
 
-        return $this->_urlBuilder->getUrl( 'paynow/redirect' );
+        $url = $this->_urlBuilder->getUrl( 'paynow/redirect' );
+
+	    pnlog( "{$pre} -> {$url} : " . 'bof' );
+	    return $url;
 
     }
      /**
@@ -456,9 +460,12 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
     public function getCheckoutRedirectUrl()
     {
         $pre = __METHOD__ . " : ";
-        pflog( $pre . 'bof' );
 
-        return $this->_urlBuilder->getUrl( 'paynow/redirect' );
+        $url = $this->_urlBuilder->getUrl( 'paynow/redirect' );
+
+	    pnlog( "{$pre} -> {$url} : " . 'bof' );
+
+	    return $url;
     }
 
     /**
@@ -471,7 +478,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
     public function initialize( $paymentAction, $stateObject )
     {
         $pre = __METHOD__ . " : ";
-        pflog( $pre . 'bof' );
+        pnlog( $pre . 'bof' );
 
         $stateObject->setState( \Magento\Sales\Model\Order::STATE_PENDING_PAYMENT );
         $stateObject->setStatus('pending_payment');
@@ -501,10 +508,9 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
      *
      * Get URL for form submission to PayNow.
      */
-    public function getPayNowUrl()
+    public function getPaynowUrl()
     {
-
-        return( 'https://'. $this->getPaynowHost( $this->getConfigData('server') ) . '/eng/process' );
+        return( 'https://'. $this->getPaynowHost( $this->getConfigData('server') ) . '/site/paynow.aspx' );
     }
 
     /**
@@ -514,15 +520,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
      */
     public function getPaynowHost( $serverMode )
     {
-        if ( !in_array( $serverMode, [ 'live', 'test' ] ) )
-        {
-            $pfHost = "www.paynow.{$serverMode}";
-        }
-        else
-        {
-            $pfHost = ( ( $serverMode == 'live' ) ? 'www' : 'sandbox' ) . '.paynow.co.za';
-        }
-
-        return $pfHost;
+	    $url = 'paynow.sagepay.co.za';
+        return $url;
     }
 }

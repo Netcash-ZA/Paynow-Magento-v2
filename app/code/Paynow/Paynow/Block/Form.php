@@ -3,7 +3,7 @@
  * Copyright © 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace Paynow\Paynow\Block\Paynow;
+namespace Paynow\Paynow\Block;
 
 use Magento\Customer\Helper\Session\CurrentCustomer;
 use Magento\Framework\Locale\ResolverInterface;
@@ -52,15 +52,20 @@ class Form extends \Magento\Payment\Block\Form
         array $data = []
     ) {
         $pre = __METHOD__ . " : ";
-        $this->_logger->debug( $pre . 'bof' );
-        $this->_paynowData = $paynowData;
+
+	    if($this->_logger)
+            $this->_logger->debug( $pre . 'bof' );
+
+	    $this->_paynowData = $paynowData;
         $this->paynowConfigFactory = $paynowConfigFactory;
         $this->_localeResolver = $localeResolver;
         $this->_config = null;
         $this->_isScopePrivate = true;
         $this->currentCustomer = $currentCustomer;
         parent::__construct($context, $data);
-        $this->_logger->debug( $pre . "eof" );
+
+	    if($this->_logger)
+            $this->_logger->debug( $pre . "eof" );
     }
 
     /**
@@ -71,7 +76,10 @@ class Form extends \Magento\Payment\Block\Form
     protected function _construct()
     {
         $pre = __METHOD__ . " : ";
-        $this->_logger->debug( $pre . 'bof' );
+
+	    if($this->_logger)
+            $this->_logger->debug( $pre . 'bof' );
+
         $this->_config = $this->paynowConfigFactory->create()->setMethod( $this->getMethodCode() );
         parent::_construct();
     }

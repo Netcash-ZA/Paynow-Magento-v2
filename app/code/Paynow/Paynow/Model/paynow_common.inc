@@ -2,61 +2,61 @@
 
 //// Create user agent string
 // User agent constituents (for cURL)
-define( 'PF_SOFTWARE_NAME', 'Magento' );
-define( 'PF_SOFTWARE_VER', '2.0' );
-define( 'PF_MODULE_NAME', 'PayNow-Magento' );
-define( 'PF_MODULE_VER', '1.1' );
+define( 'PN_SOFTWARE_NAME', 'Magento' );
+define( 'PN_SOFTWARE_VER', '2.0' );
+define( 'PN_MODULE_NAME', 'PayNow-Magento-v2' );
+define( 'PN_MODULE_VER', '1.1' );
 
 // Features
 // - PHP
-$pfFeatures = 'PHP '. phpversion() .';';
+$pnFeatures = 'PHP ' . phpversion() . ';';
 
 // - cURL
 if( in_array( 'curl', get_loaded_extensions() ) )
 {
-    define( 'PF_CURL', '' );
-    $pfVersion = curl_version();
-    $pfFeatures .= ' curl '. $pfVersion['version'] .';';
+    define( 'PN_CURL', '' );
+    $pnVersion = curl_version();
+    $pnFeatures .= ' curl ' . $pnVersion['version'] . ';';
 }
 else
-    $pfFeatures .= ' nocurl;';
+    $pnFeatures .= ' nocurl;';
 
 // Create user agrent
-define( 'PF_USER_AGENT', PF_SOFTWARE_NAME .'/'. PF_SOFTWARE_VER .' ('. trim( $pfFeatures ) .') '. PF_MODULE_NAME .'/'. PF_MODULE_VER );
+define( 'PN_USER_AGENT', PN_SOFTWARE_NAME . '/' . PN_SOFTWARE_VER . ' (' . trim( $pnFeatures ) . ') ' . PN_MODULE_NAME . '/' . PN_MODULE_VER );
 
 // General Defines
-define( 'PF_TIMEOUT', 15 );
-define( 'PF_EPSILON', 0.01 );
+define( 'PN_TIMEOUT', 15 );
+define( 'PN_EPSILON', 0.01 );
 
 // Messages
     // Error
-define( 'PF_ERR_AMOUNT_MISMATCH', 'Amount mismatch' );
-define( 'PF_ERR_BAD_ACCESS', 'Bad access of page' );
-define( 'PF_ERR_BAD_SOURCE_IP', 'Bad source IP address' );
-define( 'PF_ERR_CONNECT_FAILED', 'Failed to connect to PayNow' );
-define( 'PF_ERR_INVALID_SIGNATURE', 'Security signature mismatch' );
-define( 'PF_ERR_MERCHANT_ID_MISMATCH', 'Merchant ID mismatch' );
-define( 'PF_ERR_NO_SESSION', 'No saved session found for ITN transaction' );
-define( 'PF_ERR_ORDER_ID_MISSING_URL', 'Order ID not present in URL' );
-define( 'PF_ERR_ORDER_ID_MISMATCH', 'Order ID mismatch' );
-define( 'PF_ERR_ORDER_INVALID', 'This order ID is invalid' );
-define( 'PF_ERR_ORDER_PROCESSED', 'This order has already been processed' );
-define( 'PF_ERR_PDT_FAIL', 'PDT query failed' );
-define( 'PF_ERR_PDT_TOKEN_MISSING', 'PDT token not present in URL' );
-define( 'PF_ERR_SESSIONID_MISMATCH', 'Session ID mismatch' );
-define( 'PF_ERR_UNKNOWN', 'Unkown error occurred' );
+define( 'PN_ERR_AMOUNT_MISMATCH', 'Amount mismatch' );
+define( 'PN_ERR_BAD_ACCESS', 'Bad access of page' );
+define( 'PN_ERR_BAD_SOURCE_IP', 'Bad source IP address' );
+define( 'PN_ERR_CONNECT_FAILED', 'Failed to connect to PayNow' );
+define( 'PN_ERR_INVALID_SIGNATURE', 'Security signature mismatch' );
+define( 'PN_ERR_MERCHANT_ID_MISMATCH', 'Merchant ID mismatch' );
+define( 'PN_ERR_NO_SESSION', 'No saved session found for ITN transaction' );
+define( 'PN_ERR_ORDER_ID_MISSING_URL', 'Order ID not present in URL' );
+define( 'PN_ERR_ORDER_ID_MISMATCH', 'Order ID mismatch' );
+define( 'PN_ERR_ORDER_INVALID', 'This order ID is invalid' );
+define( 'PN_ERR_ORDER_PROCESSED', 'This order has already been processed' );
+define( 'PN_ERR_PDT_FAIL', 'PDT query failed' );
+define( 'PN_ERR_PDT_TOKEN_MISSING', 'PDT token not present in URL' );
+define( 'PN_ERR_SESSIONID_MISMATCH', 'Session ID mismatch' );
+define( 'PN_ERR_UNKNOWN', 'Unkown error occurred' );
 
     // General
-define( 'PF_MSG_OK', 'Payment was successful' );
-define( 'PF_MSG_FAILED', 'Payment has failed' );
-define( 'PF_MSG_PENDING',
+define( 'PN_MSG_OK', 'Payment was successful' );
+define( 'PN_MSG_FAILED', 'Payment has failed' );
+define( 'PN_MSG_PENDING',
     'The payment is pending. Please note, you will receive another Instant'.
     ' Transaction Notification when the payment status changes to'.
     ' "Completed", or "Failed"' );
 
-// {{{ pfLog
+// {{{ pnLog
 /**
- * pflog
+ * pnlog
  *
  * Log function for logging output.
  *
@@ -64,13 +64,13 @@ define( 'PF_MSG_PENDING',
  * @param $msg String Message to log
  * @param $close Boolean Whether to close the log file or not
  */
-function pflog( $msg = '', $close = false )
+function pnlog( $msg = '', $close = false )
 {
     static $fh = 0;
     global $module;
 
     // Only log if debugging is enabled
-    if( PF_DEBUG )
+    if( PN_DEBUG )
     {
         if( $close )
         {
@@ -98,11 +98,11 @@ function pflog( $msg = '', $close = false )
 // }}}
 // {{{ pfGetData
 /**
- * pfGetData
+ * pnGetData
  *
  * @author Jonathan Smit
  */
-function pfGetData()
+function pnGetData()
 {
     // Posted variables from ITN
     $pfData = $_POST;
@@ -117,188 +117,26 @@ function pfGetData()
     else
         return( $pfData );
 }
+
 // }}}
-// {{{ pfValidSignature
+// {{{ pnValidData
+
 /**
- * pfValidSignature
+ * pnValidData
  *
- * @author Jonathan Smit
+ * @param $pnHost String Hostname to use
+ * @param $pnParamString String
  */
-function pfValidSignature( $pfData = null, &$pfParamString = null, $pfPassphrase = null, $serverMode=null )
+function pnValidData( $pnHost = 'paynow.co.za', $pnParamString = '' )
 {
-
-    // Dump the submitted variables and calculate security signature
-    foreach( $pfData as $key => $val )
-    {
-        if( $key != 'signature' )
-            $pfParamString .= $key .'='. urlencode( $val ) .'&';
-    }
-
-    // Remove the last '&' from the parameter string
-    $pfParamString = substr( $pfParamString, 0, -1 );
-
-    if( empty($serverMode) && (is_null( $pfPassphrase ) ||  $serverMode != 'live') )
-    {
-        $tempParamString = $pfParamString;
-    }
-    else
-    {
-        $tempParamString = $pfParamString."&passphrase=".urlencode( $pfPassphrase );
-    }
-
-    $signature = md5( $tempParamString );
-
-    $result = ( $pfData['signature'] == $signature );
-
-    pflog( 'Signature = '. ( $result ? 'valid' : 'invalid' ) );
-
-    return( $result );
+	return true;
 }
+
 // }}}
-// {{{ pfValidData
-/**
- * pfValidData
- *
- * @author Jonathan Smit
- * @param $pfHost String Hostname to use
- * @param $pfParamString String
- */
-function pfValidData( $pfHost = 'www.paynow.co.za', $pfParamString = '' )
-{
-    pflog( 'Host = '. $pfHost );
-    pflog( 'Params = '. $pfParamString );
-    $response = null;
-    // Use cURL (if available)
-    if( defined( 'PF_CURL' ) )
-    {
-        // Variable initialization
-        $url = 'https://'. $pfHost .'/eng/query/validate';
 
-        // Create default cURL object
-        $ch = curl_init();
-
-        // Set cURL options - Use curl_setopt for freater PHP compatibility
-        // Base settings
-        curl_setopt( $ch, CURLOPT_USERAGENT, PF_USER_AGENT );  // Set user agent
-        curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );      // Return output as string rather than outputting it
-        curl_setopt( $ch, CURLOPT_HEADER, false );             // Don't include header in output
-        curl_setopt( $ch, CURLOPT_SSL_VERIFYHOST, 2 );
-        curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
-
-        // Standard settings
-        curl_setopt( $ch, CURLOPT_URL, $url );
-        curl_setopt( $ch, CURLOPT_POST, true );
-        curl_setopt( $ch, CURLOPT_POSTFIELDS, $pfParamString );
-        curl_setopt( $ch, CURLOPT_TIMEOUT, PF_TIMEOUT );
-
-        // Execute CURL
-        $response = curl_exec( $ch );
-        curl_close( $ch );
-    }
-    // Use fsockopen
-    else
-    {
-        // Variable initialization
-        $header = '';
-        $res = '';
-        $headerDone = false;
-
-        // Construct Header
-        $header = "POST /eng/query/validate HTTP/1.0\r\n";
-       	$header .= "Host: ". $pfHost ."\r\n";
-        $header .= "User-Agent: ". PF_USER_AGENT ."\r\n";
-        $header .= "Content-Type: application/x-www-form-urlencoded\r\n";
-        $header .= "Content-Length: " . strlen( $pfParamString ) . "\r\n\r\n";
-
-        // Connect to server
-        $socket = fsockopen( 'ssl://'. $pfHost, 443, $errno, $errstr, PF_TIMEOUT );
-
-        // Send command to server
-        fputs( $socket, $header . $pfParamString );
-
-        // Read the response from the server
-        while( !feof( $socket ) )
-        {
-            $line = fgets( $socket, 1024 );
-
-            // Check if we are finished reading the header yet
-            if( strcmp( $line, "\r\n" ) == 0 )
-            {
-                // read the header
-                $headerDone = true;
-            }
-            // If header has been processed
-            else if( $headerDone )
-            {
-                // Read the main response
-                $response .= $line;
-            }
-        }
-
-    }
-
-    pflog( "Response:\n". print_r( $response, true ) );
-
-    // Interpret Response
-    $lines = explode( "\r\n", $response );
-    $verifyResult = trim( $lines[0] );
-
-    if( strcasecmp( $verifyResult, 'VALID' ) == 0 )
-        return( true );
-    else
-        return( false );
-}
-// }}}
-// {{{ pfValidIP
-/**
- * pfValidIP
- *
- * @author Jonathan Smit
- *
- * @param string $sourceIP String Source IP address
- * @param string $serverMode
- *
- * @return bool
- */
-function pfValidIP( $sourceIP, $serverMode = '' )
-{
-    // Variable initialization
-    $validHosts = array(
-        'www.paynow.lefu',
-        'sandbox.paynow.co.za',
-        'w1w.paynow.co.za',
-        'w2w.paynow.co.za',
-        );
-
-    if ( !empty( $serverMode ) )
-    {
-        array_push( $validHosts, "www.paynow.{$serverMode}" );
-    }
-
-    $validIps = array();
-
-    foreach( $validHosts as $pfHostname )
-    {
-        $ips = gethostbynamel( $pfHostname );
-
-        if( $ips !== false )
-            $validIps = array_merge( $validIps, $ips );
-    }
-
-    // Remove duplicates
-    $validIps = array_unique( $validIps );
-
-    pflog( "Valid IPs:\n". print_r( $validIps, true ) );
-
-    if( in_array( $sourceIP, $validIps ) )
-        return( true );
-    else
-        return( false );
-}
-// }}}
 // {{{ pfAmountsEqual
 /**
- * pfAmountsEqual
+ * pnAmountsEqual
  *
  * Checks to see whether the given amounts are equal using a proper floating
  * point comparison with an Epsilon which ensures that insignificant decimal
@@ -310,12 +148,11 @@ function pfValidIP( $sourceIP, $serverMode = '' )
  * @param $amount1 Float 1st amount for comparison
  * @param $amount2 Float 2nd amount for comparison
  */
-function pfAmountsEqual( $amount1, $amount2 )
+function pnAmountsEqual( $amount1, $amount2 )
 {
-    if( abs( floatval( $amount1 ) - floatval( $amount2 ) ) > PF_EPSILON )
+    if( abs( floatval( $amount1 ) - floatval( $amount2 ) ) > PN_EPSILON )
         return( false );
     else
         return( true );
 }
 // }}}
-?>

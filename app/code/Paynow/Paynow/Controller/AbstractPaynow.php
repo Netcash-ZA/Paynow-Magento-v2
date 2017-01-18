@@ -145,9 +145,9 @@ abstract class AbstractPaynow extends AppAction implements RedirectLoginInterfac
         $parameters = [ 'params' => [ $this->_configMethod ] ];
         $this->_config = $this->_objectManager->create( $this->_configType, $parameters );
 
-        if (! defined('PF_DEBUG'))
+        if (! defined('PN_DEBUG'))
         {
-            define('PF_DEBUG', $this->getConfigData('debug'));
+            define('PN_DEBUG', $this->getConfigData('debug'));
         }
 
         $this->_logger->debug( $pre . 'eof' );

@@ -23,21 +23,21 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Log request data to paynow.log, should be set to "No" when site is live</comment>
                 </field>
-                <field id="server" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="0">
+                <!--field id="server" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>server</label>
                     <comment> test or live - enter "test" to test the integration with Pay Now sandbox; enter "live" when ready to perfrom live transactions.</comment>
-                </field>
-                <field id="merchant_key" translate="label" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Merchant Key</label>
+                </field-->
+                <field id="service_key" translate="label" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Service Key</label>
 
                 </field>
-                <field id="passphrase" translate="label" type="text" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Passphrase</label>
-                    <comment>If passphrase set, ensure the identical passphrase is set on your Pay Now account</comment>
-                </field>
-                <field id="merchant_id" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <label>Merchant ID</label>
-                </field>
+                <!--<field id="passphrase" translate="label" type="text" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="0">-->
+                    <!--<label>Passphrase</label>-->
+                    <!--<comment>If passphrase set, ensure the identical passphrase is set on your Pay Now account</comment>-->
+                <!--</field>-->
+                <!--<field id="merchant_id" translate="label" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">-->
+                    <!--<label>Merchant ID</label>-->
+                <!--</field>-->
                 <field id="allowed_carrier" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Allowed Shipping Methods</label>
                     <source_model>Magento\Shipping\Model\Config\Source\Allmethods</source_model>

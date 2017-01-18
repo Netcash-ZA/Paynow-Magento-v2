@@ -170,7 +170,7 @@ class Config extends AbstractConfig
      */
     public function getPaymentMarkWhatIsPaynow()
     {
-        return 'PayNow Payment gateway';
+        return 'Pay Now Payment gateway';
     }
 
     /**
@@ -248,7 +248,7 @@ class Config extends AbstractConfig
      * @return string|null
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function _mapPayNowFieldset($fieldName)
+    protected function _mapPaynowFieldset($fieldName)
     {
         return "payment/{$this->_methodCode}/{$fieldName}";
     }
@@ -263,6 +263,6 @@ class Config extends AbstractConfig
      */
     protected function _getSpecificConfigPath($fieldName)
     {
-        return $this->_mapPayNowFieldset($fieldName);
+        return $this->_mapPaynowFieldset($fieldName);
     }
 }

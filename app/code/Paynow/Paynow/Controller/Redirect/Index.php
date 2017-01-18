@@ -33,7 +33,7 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
     public function execute()
     {
         $pre = __METHOD__ . " : ";
-        pflog($pre . 'bof');
+        pnlog( $pre . 'bof');
 
         $page_object = $this->pageFactory->create();;
 
