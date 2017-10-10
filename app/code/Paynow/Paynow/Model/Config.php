@@ -56,8 +56,8 @@ class Config extends AbstractConfig
         \Magento\Directory\Helper\Data $directoryHelper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         $params = [],
-        \Psr\Log\LoggerInterface $logger,
-        \Magento\Framework\View\Asset\Repository $assetRepo
+        \Psr\Log\LoggerInterface $logger = null,
+        \Magento\Framework\View\Asset\Repository $assetRepo = null
     ) {
         $this->_logger = $logger;
         parent::__construct($scopeConfig);
@@ -65,7 +65,7 @@ class Config extends AbstractConfig
         $this->_storeManager = $storeManager;
         $this->_assetRepo = $assetRepo;
 
-        if ($params) {
+        if ($params && !empty($params)) {
             $method = array_shift($params);
             $this->setMethod($method);
             if ($params) {
@@ -159,7 +159,7 @@ class Config extends AbstractConfig
      */
     public function getPaymentMarkImageUrl()
     {
-        return $this->_assetRepo->getUrl('Paynow_Paynow::images/logo.png');
+        return $this->_assetRepo ? $this->_assetRepo->getUrl('Paynow_Paynow::images/logo.png') : 'https://sagepay.co.za/wp-content/uploads/2016/05/sage-pay-small.png';
     }
 
     /**
