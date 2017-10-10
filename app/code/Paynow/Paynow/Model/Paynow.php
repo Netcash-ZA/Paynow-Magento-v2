@@ -293,22 +293,6 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 	}
 
 	/**
-	 * Place an order with authorization or capture action
-	 *
-	 * @param Payment $payment
-	 * @param float $amount
-	 *
-	 * @return $this
-	 */
-	protected function _placeOrder( Payment $payment, $amount )
-	{
-
-		$pre = __METHOD__ . " : ";
-		$this->_logger->debug( $pre . 'bof' );
-
-	}
-
-	/**
 	 * this where we compile data posted by the form to paynow
 	 * @return array
 	 */
