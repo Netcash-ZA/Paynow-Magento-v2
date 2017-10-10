@@ -387,11 +387,21 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 		$pfSignature = md5( $pnOutput );
 
 		$data['signature'] = $pfSignature;
-		$data['user_agent'] = 'Magento 2.0';
+		$data['user_agent'] = 'Magento ' . $this->getAppVersion();
 		pnlog( $pre . 'data is :' . print_r( $data, true ) );
 		return( $data );
 	}
 
+    /**
+     * getAppVersion
+     *
+     * @return string
+     */
+    private function getAppVersion()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $version = $objectManager->get('Magento\Framework\App\ProductMetadataInterface')->getVersion();
+    }
 
 	/**
 	 * getTotalAmount
