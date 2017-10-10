@@ -59,7 +59,7 @@ class Config extends AbstractConfig
         \Psr\Log\LoggerInterface $logger = null,
         \Magento\Framework\View\Asset\Repository $assetRepo = null
     ) {
-        $this->_logger = $logger;
+    	$this->_logger = $logger;
         parent::__construct($scopeConfig);
         $this->directoryHelper = $directoryHelper;
         $this->_storeManager = $storeManager;
@@ -182,7 +182,8 @@ class Config extends AbstractConfig
     {
         $paymentAction = null;
         $pre = __METHOD__ . ' : ';
-        $this->_logger->debug( $pre . 'bof' );
+        if( $this->_logger)
+        	$this->_logger->debug( $pre . 'bof' );
 
         $action = $this->getValue( 'paymentAction' );
 
@@ -199,7 +200,8 @@ class Config extends AbstractConfig
                 break;
         }
 
-        $this->_logger->debug( $pre . 'eof : paymentAction is ' . $paymentAction );
+        if( $this->_logger)
+        	$this->_logger->debug( $pre . 'eof : paymentAction is ' . $paymentAction );
 
         return $paymentAction;
     }
@@ -215,13 +217,15 @@ class Config extends AbstractConfig
         $supported = false;
         $pre = __METHOD__ . ' : ';
 
-        $this->_logger->debug($pre . "bof and code: {$code}" );
+        if( $this->_logger)
+        	$this->_logger->debug($pre . "bof and code: {$code}" );
 
         if (in_array($code, $this->_supportedCurrencyCodes)) {
             $supported = true;
         }
 
-        $this->_logger->debug( $pre . "eof and supported : {$supported}" );
+        if( $this->_logger)
+        	$this->_logger->debug( $pre . "eof and supported : {$supported}" );
 
         return $supported;
     }
