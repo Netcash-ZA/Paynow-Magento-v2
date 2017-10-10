@@ -10,7 +10,7 @@
     <referenceBlock name="content">
         <block
             class="\Paynow\Paynow\Block\Payment\Request"
-            name="lefu_paynow"
+            name="paynow_paynow"
             template="redirect.phtml"
             cacheable="false"/>
     </referenceBlock>
