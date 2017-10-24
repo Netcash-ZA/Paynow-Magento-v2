@@ -207,8 +207,12 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
             ->addObject($invoice->getOrder())
             ->save();
 
-        $this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
-        $this->_order->setIsCustomerNotified(true);
+    	$invoiceSender = $this->_objectManager->get('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
+        $invoiceSender->send($invoice);
+    	$history->setIsCustomerNotified(true);
+    	$history->save();
+
+    	$this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
         $this->_order->save();
     }
 }
