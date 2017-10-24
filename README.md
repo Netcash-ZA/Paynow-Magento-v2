@@ -22,7 +22,7 @@ Download the files from GitHub:
     - php ./bin/magento setup:static-content:deploy
     - php ./bin/magento cache:clean
 4. Log into the admin panel and navigate to Stores > Configuration > Sales > Payment Method and click on Paynow
-5. Enable the module, as well as debugging. 
+5. Enable the module, as well as debugging.
 6. Add your Pay Now Service Key
 7. Click 'Save Config'
 
@@ -50,3 +50,10 @@ You will need:
 6. Choose the following for your Accept, Decline, Notify & Redirect URLs:
 
 > http://domain.co.za/paynow/notify/
+
+Issues & Feature Requests
+-------------------------
+
+We welcome your feedback.
+
+Please contact Sage Pay South Africa with any questions or issues.
