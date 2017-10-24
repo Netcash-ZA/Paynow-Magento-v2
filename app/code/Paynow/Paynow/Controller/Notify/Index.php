@@ -151,6 +151,11 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 				// Save invoice
 				$this->saveInvoice();
 
+				return $this->_redirect('paynow/redirect/success', array( '_secure'=> true ) );
+
+			} else {
+
+				return $this->_redirect('paynow/redirect/cancel', array( '_secure'=> true ) );
 			}
 		}
 
@@ -207,12 +212,12 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
             ->addObject($invoice->getOrder())
             ->save();
 
-	$invoiceSender = $this->_objectManager->get('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
+    	$invoiceSender = $this->_objectManager->get('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $invoiceSender->send($invoice);
-	$history->setIsCustomerNotified(true);
-	$history->save();
+    	$history->setIsCustomerNotified(true);
+    	$history->save();
 
-        $this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
+    	$this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
         $this->_order->save();
     }
 }
