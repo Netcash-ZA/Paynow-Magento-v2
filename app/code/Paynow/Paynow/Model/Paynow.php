@@ -293,22 +293,6 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 	}
 
 	/**
-	 * Place an order with authorization or capture action
-	 *
-	 * @param Payment $payment
-	 * @param float $amount
-	 *
-	 * @return $this
-	 */
-	protected function _placeOrder( Payment $payment, $amount )
-	{
-
-		$pre = __METHOD__ . " : ";
-		$this->_logger->debug( $pre . 'bof' );
-
-	}
-
-	/**
 	 * this where we compile data posted by the form to paynow
 	 * @return array
 	 */
@@ -387,11 +371,21 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 		$pfSignature = md5( $pnOutput );
 
 		$data['signature'] = $pfSignature;
-		$data['user_agent'] = 'Magento 2.0';
+		$data['user_agent'] = 'Magento ' . $this->getAppVersion();
 		pnlog( $pre . 'data is :' . print_r( $data, true ) );
 		return( $data );
 	}
 
+    /**
+     * getAppVersion
+     *
+     * @return string
+     */
+    private function getAppVersion()
+    {
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $version = $objectManager->get('Magento\Framework\App\ProductMetadataInterface')->getVersion();
+    }
 
 	/**
 	 * getTotalAmount

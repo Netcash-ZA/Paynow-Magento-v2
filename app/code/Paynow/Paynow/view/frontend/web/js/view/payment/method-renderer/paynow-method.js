@@ -1,6 +1,7 @@
 /**
  * Copyright � 2015 Magento. All rights reserved.
  * See COPYING.txt for license details.
+ * See COPYING.txt for license details.
  */
 define(
     [
@@ -27,35 +28,11 @@ define(
             defaults: {
                 template: 'Paynow_Paynow/payment/paynow'
             },
+            redirectAfterPlaceOrder: false,
+
             getCode: function() {
                 return 'paynow';
             },
-
-            // Thanks to Dragan Vuletic: http://stackoverflow.com/a/33466514
-            placeOrder: function (data, event) {
-                if (event) {
-                    event.preventDefault();
-                }
-                var self = this,
-                    placeOrder,
-                    emailValidationResult = customer.isLoggedIn(),
-                    loginFormSelector = 'form[data-role=email-with-possible-login]';
-                if (!customer.isLoggedIn()) {
-                    $(loginFormSelector).validation();
-                    emailValidationResult = Boolean($(loginFormSelector + ' input[name=username]').valid());
-                }
-                if (emailValidationResult && this.validate() && additionalValidators.validate()) {
-                    this.isPlaceOrderActionAllowed(false);
-                    placeOrder = placeOrderAction(this.getData(), false, this.messageContainer);
-
-                    $.when(placeOrder).fail(function () {
-                        self.isPlaceOrderActionAllowed(true);
-                    }).done(this.afterPlaceOrder.bind(this));
-                    return true;
-                }
-                return false;
-            },
-
             /**
              * Get value of instruction field.
              * @returns {String}
@@ -68,7 +45,8 @@ define(
             },
             afterPlaceOrder: function () {
                 // window.location.replace( url.build(window.checkoutConfig.payment.paynow.redirectUrl.paynow) );
-                window.location.replace( window.checkoutConfig.payment.paynow.redirectUrl.paynow );
+                // window.location.replace( window.checkoutConfig.payment.paynow.redirectUrl.paynow );
+                window.location.replace( url.build(window.checkoutConfig.payment.paynow.redirectUrl.paynow) );
             },
             /** Returns payment acceptance mark link path */
             getPaymentAcceptanceMarkHref: function() {

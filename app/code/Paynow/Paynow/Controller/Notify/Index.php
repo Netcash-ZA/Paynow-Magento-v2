@@ -151,6 +151,11 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 				// Save invoice
 				$this->saveInvoice();
 
+				return $this->_redirect('paynow/redirect/success', array( '_secure'=> true ) );
+
+			} else {
+
+				return $this->_redirect('paynow/redirect/cancel', array( '_secure'=> true ) );
 			}
 		}
 
