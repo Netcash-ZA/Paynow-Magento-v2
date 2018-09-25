@@ -102,6 +102,7 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 				$pnErrMsg = PN_ERR_ORDER_PROCESSED;
 
 				// Redirect to order page
+				pnlog( 'Redirection to: sales/order/view');
 				return $this->_redirect('sales/order/view', array( 'order_id'=> $orderId ) );
 //				header("Location: $order_url");
 			}
@@ -139,6 +140,9 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 				//  b. Force order complete status (http://stackoverflow.com/a/18711313)
 
 				// Update order additional payment information
+
+				pnlog("Saving additional info...");
+
 				$payment = $this->_order->getPayment();
 				$payment->setAdditionalInformation( "TransactionAccepted", $pnData['TransactionAccepted'] );
 				$payment->setAdditionalInformation( "Reference", $pnData['Reference'] );
@@ -149,12 +153,15 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 				$payment->save();
 
 				// Save invoice
+				pnlog("Saving invoice...");
 				$this->saveInvoice();
 
+				pnlog("Redirecting to: paynow/redirect/success");
 				return $this->_redirect('paynow/redirect/success', array( '_secure'=> true ) );
 
 			} else {
 
+				pnlog("Redirecting to: paynow/redirect/cancel");
 				return $this->_redirect('paynow/redirect/cancel', array( '_secure'=> true ) );
 			}
 		}
@@ -199,25 +206,29 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
      */
 	protected function saveInvoice()
     {
-        pnlog( 'Saving invoice' );
+        pnlog( 'saveInvoice called' );
 
 		// Check for mail msg
 		$invoice = $this->_order->prepareInvoice();
-
 		$invoice->register()->capture();
 
+		pnlog( 'Preparing to save transaction' );
         /** @var \Magento\Framework\DB\Transaction $transaction */
         $transaction = $this->_transactionFactory->create();
         $transaction->addObject($invoice)
             ->addObject($invoice->getOrder())
             ->save();
 
+		pnlog( 'Preparing to send invoice' );
     	$invoiceSender = $this->_objectManager->get('Magento\Sales\Model\Order\Email\Sender\InvoiceSender');
         $invoiceSender->send($invoice);
-    	$history->setIsCustomerNotified(true);
-    	$history->save();
+    	// $history->setIsCustomerNotified(true);
+    	// $history->save();
 
+    	pnlog( 'Add status history' );
     	$this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
+
+    	pnlog( 'Saving order' );
         $this->_order->save();
     }
 }
