@@ -66,21 +66,34 @@ define( 'PN_MSG_PENDING',
  */
 function pnlog( $msg = '', $close = false )
 {
-    // static $fh = 0;
-    // global $module;
+    static $fh = 0;
+    global $module;
 
     // Only log if debugging is enabled
-    // if( PN_DEBUG ) {
+    if( PN_DEBUG )
+    {
+        if( $close )
+        {
+            fclose( $fh );
+        }
+        else
+        {
+            // If file doesn't exist, create it
+            if( !$fh )
+            {
+                $pathinfo = pathinfo( __FILE__ );
+                $fh = fopen( $pathinfo['dirname'] .'/paynow.log', 'a+' );
+            }
 
-		// \Magento\Framework\App\ObjectManager::getInstance()
-		//     ->get('Psr\Log\LoggerInterface')
-		//         ->debug( '[PayNow] ' . $msg );
+            // If file was successfully created
+            if( $fh )
+            {
+                $line = date( 'Y-m-d H:i:s' ) .' : '. $msg ."\n";
 
-    	$writer = new \Zend\Log\Writer\Stream(BP . '/var/log/paynow.log');
-    	$logger = new \Zend\Log\Logger();
-    	$logger->addWriter($writer);
-    	$logger->info( $msg );
-    // }
+                fwrite( $fh, $line );
+            }
+        }
+    }
 }
 // }}}
 // {{{ pfGetData
