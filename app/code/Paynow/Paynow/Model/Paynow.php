@@ -13,6 +13,8 @@ use Magento\Sales\Model\Order\Payment;
 use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\Quote\Model\Quote;
 
+// use \Paynow\Paynow\Helper\PaynowValidate;
+
 /**
  * @SuppressWarnings(PHPMD.TooManyFields)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -296,8 +298,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 	 * this where we compile data posted by the form to paynow
 	 * @return array
 	 */
-	public function getStandardCheckoutFormFields()
-	{
+	public function getStandardCheckoutFormFields() {
 		$pre = __METHOD__ . ' : ';
 		// Variable initialization
 
@@ -307,11 +308,8 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 
 		$this->_logger->debug($pre . 'serverMode : '. $this->getConfigData( 'server' ));
 
-		// If NOT test mode, use normal credentials
-//        if( $this->getConfigData( 'server' ) == 'live' ) {
-			$merchantId = $this->getConfigData( 'merchant_id' );
 		$serviceKey = $this->getConfigData( 'service_key' );
-//        }
+
 		$sageGUID = "f0f593a7-338d-406b-b340-5b4acd50f627";
 
 		// Create description
@@ -338,6 +336,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 
 			// Buyer details
 			'm9' => $order->getData( 'customer_email' ),
+			// 'm11' => $order->getData( 'customer_phone' ),
 
 			'p3' => $pnDescription,
 			'm4' => "{$customerID}",
