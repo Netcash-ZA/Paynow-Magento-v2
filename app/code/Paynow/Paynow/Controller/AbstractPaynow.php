@@ -11,11 +11,15 @@ use Paynow\Paynow\Model\Paynow;
 use Magento\Checkout\Controller\Express\RedirectLoginInterface;
 use Magento\Framework\App\Action\Action as AppAction;
 
+use Magento\Framework\App\CsrfAwareActionInterface;
+use Magento\Framework\App\Request\InvalidRequestException;
+use Magento\Framework\App\RequestInterface;
+
 /**
  * Abstract Express Checkout Controller
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-abstract class AbstractPaynow extends AppAction implements RedirectLoginInterface
+abstract class AbstractPaynow extends AppAction implements RedirectLoginInterface, CsrfAwareActionInterface
 {
     /**
      * Internal cache of checkout models
@@ -97,6 +101,23 @@ abstract class AbstractPaynow extends AppAction implements RedirectLoginInterfac
 
     /** @var \Paynow\Paynow\Model\Paynow $_paymentMethod*/
     protected $_paymentMethod;
+
+	/**
+	 * @inheritDoc
+	 */
+	public function createCsrfValidationException(
+        RequestInterface $request
+    ): ?InvalidRequestException {
+        return null;
+    }
+
+	/**
+	 * @inheritDoc
+	 */
+	public function validateForCsrf(RequestInterface $request): ?bool
+    {
+        return true;
+    }
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
