@@ -159,7 +159,7 @@ class Config extends AbstractConfig
      */
     public function getPaymentMarkImageUrl()
     {
-        return $this->_assetRepo ? $this->_assetRepo->getUrl('Paynow_Paynow::images/logo.png') : 'https://sagepay.co.za/wp-content/uploads/2016/05/sage-pay-small.png';
+        return $this->_assetRepo ? $this->_assetRepo->getUrl('Paynow_Paynow::images/logo.png') : 'https://github.com/Netcash-ZA/Paynow-Magento-v2/blob/master/app/code/Paynow/Paynow/view/frontend/web/images/logo.png?raw=true';
     }
 
     /**

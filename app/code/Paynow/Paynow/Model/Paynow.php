@@ -512,7 +512,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 	 */
 	public function getPaynowHost( $serverMode )
 	{
-		$url = 'paynow.sagepay.co.za';
+		$url = 'paynow.netcash.co.za';
 		return $url;
 	}
 }
