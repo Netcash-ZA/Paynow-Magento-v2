@@ -82,7 +82,11 @@ function pnlog( $msg = '', $close = false )
             if( !$fh )
             {
                 $pathinfo = pathinfo( __FILE__ );
-                $fh = fopen( $pathinfo['dirname'] .'/paynow.log', 'a+' );
+                try {
+	                $fh = fopen( $pathinfo['dirname'] . '/paynow.log', 'a+' );
+                } catch (\Exception $e) {
+                	// Can't write log.
+                }
             }
 
             // If file was successfully created
