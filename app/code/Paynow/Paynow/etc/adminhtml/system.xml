@@ -23,13 +23,17 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <comment>Log request data to paynow.log, should be set to "No" when site is live</comment>
                 </field>
+				<field id="do_tokenization" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+					<label>Enable Credit Card Tokenization</label>
+					<source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+					<comment>If this is turned on, a client's credit card will be tokenized and returned to your store</comment>
+				</field>
                 <!--field id="server" translate="label" type="text" sortOrder="21" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>server</label>
                     <comment> test or live - enter "test" to test the integration with Pay Now sandbox; enter "live" when ready to perfrom live transactions.</comment>
                 </field-->
                 <field id="service_key" translate="label" type="text" sortOrder="36" showInDefault="1" showInWebsite="1" showInStore="0">
                     <label>Service Key</label>
-
                 </field>
                 <!--<field id="passphrase" translate="label" type="text" sortOrder="37" showInDefault="1" showInWebsite="1" showInStore="0">-->
                     <!--<label>Passphrase</label>-->

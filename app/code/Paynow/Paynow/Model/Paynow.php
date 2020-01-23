@@ -309,6 +309,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 		$this->_logger->debug($pre . 'serverMode : '. $this->getConfigData( 'server' ));
 
 		$serviceKey = $this->getConfigData( 'service_key' );
+		$doTokenization = $this->getConfigData( 'do_tokenization' );
 
 		$sageGUID = "f0f593a7-338d-406b-b340-5b4acd50f627";
 
@@ -325,6 +326,7 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 		$pnDescription = trim(substr( "$description - ({$customerName})", 0, 254 ));
 
 		// Construct data for the form
+		pnlog( $pre . 'do tokenization? : ' . ((bool) $doTokenization ? 'YES' : 'NO') );
 		$data = array(
 			// Merchant details
 
@@ -343,7 +345,9 @@ class Paynow extends \Magento\Payment\Model\Method\AbstractMethod
 
 			// Item details
 			'p4' => $this->getTotalAmount( $order ),
-			'p2' => $orderID
+			'p2' => $orderID,
+
+			'm14' => (bool) $doTokenization ? '1' : '0'
 
 		);
 
