@@ -154,7 +154,7 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 
 				// Save invoice
 				pnlog("Saving invoice...");
-				$this->saveInvoice();
+				$this->saveInvoice($pnData);
 
 				pnlog("Redirecting to: paynow/redirect/success");
 				return $this->_redirect('paynow/redirect/success', array( '_secure'=> true ) );
@@ -204,7 +204,7 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
      *
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-	protected function saveInvoice()
+	protected function saveInvoice($postbackData)
     {
         pnlog( 'saveInvoice called' );
 
@@ -227,6 +227,24 @@ class Index extends \Paynow\Paynow\Controller\AbstractPaynow
 
     	pnlog( 'Add status history' );
     	$this->_order->addStatusHistoryComment( __( 'Notified customer about invoice #%1.', $invoice->getIncrementId() ) );
+
+	    // Store CC detail
+	    if($postbackData['Method'] == '1') {
+		    // It was a CC transaction
+		    if(isset($postbackData['ccHolder'])) {
+			    // We have CC detail
+			    $pnCreditCardDetail = "";
+			    $pnCreditCardDetail .= "Credit card name: {$postbackData['ccHolder']} \r\n";
+			    $pnCreditCardDetail .= "Credit card number: {$postbackData['ccMasked']} \r\n";
+			    $pnCreditCardDetail .= "Expiry date: {$postbackData['ccExpiry']} \r\n";
+			    $pnCreditCardDetail .= "Card token: {$postbackData['ccToken']} \r\n";
+
+			    // Add CC detail as note
+			    $this->_order->addStatusHistoryComment ("Tokenized credit card detail: \r\n{$pnCreditCardDetail}");
+		    } else {
+			    $this->_order->addStatusHistoryComment ( "Paid with credit card but tokenized detail was not received.");
+		    }
+	    }
 
     	pnlog( 'Saving order' );
         $this->_order->save();
