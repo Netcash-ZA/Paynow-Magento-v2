@@ -5,7 +5,7 @@ Revision 1.0.0
 
 Introduction
 ------------
-A credit card module to take credit card transaction for Magento usingNetcash Pay South Africa's Pay Now gateway.
+A credit card module to take credit card transaction for Magento using Netcash South Africa's Pay Now gateway.
 
 Installation Instructions
 -------------------------
@@ -33,16 +33,17 @@ Configuration
 
 You will need:
 
-* Netcash Pay Now login credentials
+* Netcash login credentials
 * Netcash Pay Now service key
 * Magento admin login credentials
 
 #### Netcash Pay Now Gateway Server Configuration Steps:
 
-1. Log into your Netcash Pay Now Gateway Server configuration page (https://merchant.netcash.co.za/SiteLogin.aspx)
+1. Log into your Netcash account (https://merchant.netcash.co.za/SiteLogin.aspx)
 2. Go to Account / Profile
-3. Click Pay Now
-4. Make a note of your Service key
+3. Click on NetConnector
+4. Click on Pay Now
+5. Make a note of your Service key
 
 #### Netcash Pay Now Callback
 
